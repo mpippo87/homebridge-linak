@@ -1,3 +1,59 @@
+> This is a maintenance fork of `vniehues/homebridge-linak` with compatibility fixes for newer versions of `idasen-controller`.
+
+
+## Compatibility with latest `idasen-controller`
+
+This fork includes fixes required to work with recent versions of `idasen-controller` and `linak-controller`.
+
+### Changes
+
+#### Removed `--movement-range`
+
+Recent versions of `idasen-controller` no longer support the `--movement-range` argument. The original plugin fails with:
+
+```text
+idasen-controller: error: unrecognized arguments: --movement-range
+```
+
+This fork removes that argument from the generated command line.
+
+#### Disabled automatic retries
+
+Recent versions of `linak-controller` may successfully move the desk but still exit with Bluetooth teardown errors such as:
+
+```text
+AttributeError: 'NoneType' object has no attribute 'disconnecting'
+```
+
+or
+
+```text
+bleak.exc.BleakError: Service Discovery has not been performed yet
+```
+
+The original plugin interprets these as movement failures and continuously retries the command, causing jerky or repeated desk movements.
+
+This fork disables automatic retries because the desk movement has already completed successfully.
+
+### Installation
+
+```bash
+cd /var/lib/homebridge
+npm install https://github.com/mpippo87/homebridge-linak.git#v1.1.2-mpippo1
+sudo hb-service restart
+```
+
+### Tested with
+
+- Homebridge 2.1.0
+- Raspberry Pi OS Bookworm
+- `idasen-controller` installed via `pipx`
+- IKEA IDÅSEN desk using a LINAK controller
+
+
+
+
+
 <span align="center">
     
 ![logo](Images/homebridge-linak-small.png?raw=true)
