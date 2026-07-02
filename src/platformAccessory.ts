@@ -82,7 +82,7 @@ export class DeskAccessory {
     this.platform.log.debug('configuring desk: ', this.accessory.context.device);
     this.baseCommand = this.platform.config.idasenControllerPath + ' --mac-address ' + this.accessory.context.device.macAddress
         + ' --base-height ' + this.accessory.context.device.baseHeight
-        + ' --movement-range ' + this.accessory.context.device.movementRange;
+;
 
     /**
      * Creating multiple services of the same type.
@@ -206,8 +206,7 @@ export class DeskAccessory {
       if (error) {
         if (error.signal !== 'SIGINT') {
           this.platform.log.debug('moving error:', error);
-          this.currentMoveRetry = this.currentMoveRetry + 1;
-          this.moveToPercent(percentage);
+          // Do not retry: recent idasen-controller/linak-controller versions can move successfully but exit with BLE teardown errors.
         } else {
           // We killed it, lets return.
           return;
